@@ -4,6 +4,7 @@ var userFormEl = document.querySelector("#user-form")
 var weatherContainerEl = document.querySelector('#city-weather')
 var searchButton = document.querySelector('#btn')
 var currentWeatherContainter = document.querySelector("#current-weather")
+var forcastContainer = document.querySelector("#forecast")
 
 
 var formSubmitHandler = function(event) {
@@ -103,8 +104,42 @@ fetch(uvIndexUrl).then(function (response) {
     } else if (uviIndex > 7) {
       currentUVI.addClass("bg-danger");
     }
-    
+
     currentHumidity.append(currentUVI)
+  }
+
+  function futureForecast(forecast) {
+    forcastContainer.text = ("")
+
+    var dailyForecast = forecast.daily;
+    for (var i = 1; i < 6; i++) {
+      var nextDay = dailyForecast[i];
+      var forcastedDate = moment(nextDay.dt * 1000).format("l");
+  
+      var dayWeather = document.createElement("div").addClass("card d-flex bg-navy text-white p-3 col-8 col-xl-2 col-md-4 col-sm-4 m-3");
+      forcastContainer.append(dayWeather);
+  
+      var weatherDate = document.createElement("h5").addClass("d-flex justify-content-center");
+      weatherDate.text(forcastedDate);
+      dayWeather.append(weatherDate);
+  
+      var forecastIcon = nextDay.weather[0].icon;
+      var forecastIconUrl = "http://openweathermap.org/img/wn/" + forecastIcon + "@2x.png";
+      var weatherIcon = document.createElement("img").attr("src", forecastIconUrl);
+      dayWeather.append(weatherIcon);
+  
+      var maxTemp = document.createElement("div").addClass("text-start");
+      maxTemp.text("High Temp:" + nextDay.temp.max + "°F");
+      dayWeather.append(maxTemp);
+  
+      var minTemp = document.createElement("div").addClass("text-start");
+      minTemp.text("Low Temp:" + nextDay.temp.min + "°F");
+      dayWeather.append(minTemp);
+  
+      var dayHumidity = document.createElement("div").addClass("text-start");
+      dayHumidity.text("Humidity:" + nextDay.humidity);
+      dayWeather.append(dayHumidity);
+    }
   }
 
 // add event listeners to forms
