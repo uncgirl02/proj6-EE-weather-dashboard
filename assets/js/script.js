@@ -70,14 +70,19 @@ fetch(uvIndexUrl).then(function (response) {
     var iconUrl = `http://openweathermap.org/img/wn/${icon}@2x.png`;
     currentIcon.attr("src", iconUrl);
   
+    var subTitle = document.querySelector(".subtitle");
+    
     var currentTemp = document.createElement("div");
     currentTemp.text(conditions.list[0].main.temp);
+    subTitle.append(currentTemp);
 
     var currentWind = document.createElement("div");
     currentWind.text(conditions.list[0].wind.speed);
+    currentTemp.append(currentWind);
     
     var currentHumidity = document.createElement("div");
     currentHumidity.text(conditions.list[0].main.humidity);
+    currentWind.append(currentHumidity)
   
   
     var lat = conditions.city.coord.lat;
@@ -86,7 +91,21 @@ fetch(uvIndexUrl).then(function (response) {
     getForecast(lat, lon);
   }
 
+  function createCurrentUvi(uvi) {
+    var currentUVI = document.createElement("div").addClass("text-white p-1");
+    var uviIndex = uvi.current.uvi;
+    currentUVI.text(uviIndex);
   
+    if (uviIndex <= 2) {
+      currentUVI.addClass("bg-success");
+    } else if (uviIndex > 2 && uviIndex <= 7) {
+      currentUVI.addClass("bg-warning");
+    } else if (uviIndex > 7) {
+      currentUVI.addClass("bg-danger");
+    }
+    
+    currentHumidity.append(currentUVI)
+  }
 
 // add event listeners to forms
 searchButton.addEventListener('submit', formSubmitHandler);
