@@ -7,13 +7,14 @@ var cityButton = document.querySelector("#saved-cities")
 var currentWeatherContainer = document.querySelector("#current-weather")
 var forecastContainer = document.querySelector("#forecast")
 var dayForecastContainer = document.querySelector("#day-forecast")
+var futureHeader = document.querySelector("#forecast-header")
 var cityName = ""
 var currentCity = document.querySelector("#city-search-term");
 var currentDate = document.querySelector("#current-date")
 var currentIcon = document.querySelector("#weather-icon");
 var subTitle = document.querySelector(".subtitle");
 var currentHumidity = document.createElement("div");
-var cityArray = {};
+var cityArray = [];
 
 
 
@@ -27,10 +28,11 @@ var formSubmitHandler = function(event) {
         getWeather();
         saveCities();
         displayList();
-
+      
         // clear old content
-        weatherContainerElinnerText = Content = '';
+        // weatherContainerEl.innerHTML = ""; 
         cityInputEl.value = '';
+
     } else {
         alert('Please enter a city');
     }
@@ -57,6 +59,11 @@ function displayList() {
     savedCityContainer.appendChild(cityList);
   }
 }
+
+cityButton.addEventListener('submit', function() {
+  cityName = cityButton.innerText;
+  getWeather();
+});
 
 // Function to get latitude and longitude coordinates from city name
 function getWeather() {
@@ -125,7 +132,7 @@ function currentWeather(weather) {
   getUvIndex(lat, lon);
   getForecast(lat, lon);
 
-  currentWeatherContainer = Content = '';
+  currentWeatherContainer;
 }
 
 //Function to Display UV Index
@@ -151,8 +158,7 @@ function currentUvIndex(uvi) {
 
 //Function to display the 5 Day future Forcast
 function futureForecast(forecast) {
-
-  var futureHeader = document.querySelector("#forecast-header")
+  
   futureHeader.innerText = "5-Day Forecast:"
   futureHeader.className = "m-0 ps-3 pt-3 pb-3 fw-bold"
   
@@ -191,7 +197,7 @@ function futureForecast(forecast) {
     dayHumidity.innerText = "Humidity: " + nextDay.humidity + "%";
     dayWeather.append(dayHumidity);
   }
-  forecastContainer = Content = '';
+ 
 }
 
 // add event listener to forms
