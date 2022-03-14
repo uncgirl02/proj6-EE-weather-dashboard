@@ -29,11 +29,20 @@ var formSubmitHandler = function(event) {
     } else {
         alert('Please enter a city');
     }
+    saveCities();
 };
 
 //Function to save searches to local storage
 
+var saveCities = function() {
+  localStorage.setItem("cities", cityName)
+}
+
 //Function to display previous city searches to webpage
+
+var previousCityList = function() {
+
+}
 
 // Function to get latitude and longitude coordinates from city name
 function getWeather() {
@@ -118,10 +127,8 @@ fetch(uvIndexUrl).then(function (response) {
     
     if (uviIndex <= 2) {
       uviColor.className = "p-1 bg-success rounded";
-    } else if (uviIndex > 2 && uviIndex <= 5) {
+    } else if (uviIndex > 2 && uviIndex <= 7) {
       uviColor.className = "p-1 bg-warning rounded";
-    } else if (uviIndex > 5 && uviIndex <= 7) {
-      uviColor.className = "p-1 bg-orange rounded";
     } else if (uviIndex > 7) {
       uviColor.className = "p-1 bg-danger rounded";
     }
