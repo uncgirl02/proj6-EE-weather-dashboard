@@ -3,7 +3,8 @@ var cityInputEl = document.querySelector('#city')
 var userFormEl = document.querySelector("#user-form")
 var weatherContainerEl = document.querySelector('#city-weather')
 var searchButton = document.querySelector('#btn')
-var cityButton = document.querySelector("#saved-cities")
+// var cityButton = document.querySelector("#saved-cities")
+var savedCityContainer = document.querySelector("#saved-cities")
 var currentWeatherContainer = document.querySelector("#current-weather")
 var forecastContainer = document.querySelector("#forecast")
 var dayForecastContainer = document.querySelector("#day-forecast")
@@ -13,7 +14,9 @@ var currentCity = document.querySelector("#city-search-term");
 var currentDate = document.querySelector("#current-date")
 var currentIcon = document.querySelector("#weather-icon");
 var subTitle = document.querySelector(".subtitle");
+var currentTemp = document.createElement("div");
 var currentHumidity = document.createElement("div");
+var currentWind = document.createElement("div");
 var cityArray = [];
 
 
@@ -21,18 +24,19 @@ var cityArray = [];
 var formSubmitHandler = function(event) {
     // prevent page from refreshing
     event.preventDefault();
+  
     // get value from input element
     cityName = cityInputEl.value.trim();
+
     //If there is a value to CityName, run getWeather
     if (cityName) {
-        getWeather();
-        saveCities();
-        displayList();
+      saveCities();
+      displayList();
+      getWeather(cityName)
       
-        // clear old content
-        // weatherContainerEl.innerHTML = ""; 
-        cityInputEl.value = '';
-
+     // clear old content 
+      cityInputEl.value = ''; 
+       
     } else {
         alert('Please enter a city');
     }
@@ -48,27 +52,28 @@ function saveCities() {
 }
 
 //Function to display previous city searches to webpage
-
 function displayList() {
   
   for (var i = 0; i < cityArray.length; i++) {
-    var savedCityContainer = document.querySelector("#saved-cities")
+    
     var cityList = document.createElement("button")
-    cityList.className = "btn btn-secondary m-2"
+    cityList.className = "city-button btn btn-secondary m-2"
     cityList.innerText = cityArray[i];
     savedCityContainer.appendChild(cityList);
   }
 }
 
-cityButton.addEventListener('submit', function() {
-  cityName = cityButton.innerText;
-  getWeather();
+savedCityContainer.addEventListener('click', function(event) {
+  event.preventDefault();
+  console.log(event.target.innerText);
+  cityName = event.target.innerText
+  getWeather(cityName);
 });
 
 // Function to get latitude and longitude coordinates from city name
-function getWeather() {
-    cityName = cityInputEl.value.trim();
-    var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + appId + "&units=imperial";
+function getWeather(namedCity) {
+    
+    var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + namedCity + "&appid=" + appId + "&units=imperial";
   
     fetch(apiUrl).then(function (response) {
       response.json().then(function (data) {
@@ -101,6 +106,7 @@ function getForecast(lat, lon) {
   
 //Function to display current weather
 function currentWeather(weather) {
+  
   currentCity.innerText = cityName
   currentCity.className = "fw-bold fs-1 p-3"
   currentDate.innerText = `(${moment(weather.list.dt_txt).format("l")})`;
@@ -112,12 +118,10 @@ function currentWeather(weather) {
   var iconUrl = "http://openweathermap.org/img/wn/" + icon + "@2x.png";
   currentIcon.setAttribute("src", iconUrl);
   
-  var currentTemp = document.createElement("div");
   currentTemp.className = "p-3"
   currentTemp.innerText = "Temp: " + weather.list[0].main.temp + "°F";
   subTitle.append(currentTemp);
 
-  var currentWind = document.createElement("div");
   currentWind.className = "pt-3 pb-3"
   currentWind.innerText = "Wind Speed: " + weather.list[0].wind.speed + "mph";
   currentTemp.append(currentWind);
@@ -126,13 +130,10 @@ function currentWeather(weather) {
   currentHumidity.className = "pt-3 pb-3"
   currentWind.append(currentHumidity)
 
-
   var lat = weather.city.coord.lat;
   var lon = weather.city.coord.lon;
   getUvIndex(lat, lon);
   getForecast(lat, lon);
-
-  currentWeatherContainer;
 }
 
 //Function to Display UV Index
@@ -159,6 +160,9 @@ function currentUvIndex(uvi) {
 //Function to display the 5 Day future Forcast
 function futureForecast(forecast) {
   
+  //Clear old content
+  dayForecastContainer.innerHTML = ""
+  
   futureHeader.innerText = "5-Day Forecast:"
   futureHeader.className = "m-0 ps-3 pt-3 pb-3 fw-bold"
   
@@ -166,7 +170,6 @@ function futureForecast(forecast) {
   for (var i = 1; i < 6; i++) {
     var nextDay = dailyForecast[i];
     var forecastedDate = moment(nextDay.dt * 1000).format("l");
-
     var dayWeather = document.createElement("div")
     dayWeather.className = "weather-card card d-flex text-white p-3 col-8 col-xl-2 col-md-4 col-sm-4 m-3";
     dayForecastContainer.appendChild(dayWeather);
@@ -197,7 +200,6 @@ function futureForecast(forecast) {
     dayHumidity.innerText = "Humidity: " + nextDay.humidity + "%";
     dayWeather.append(dayHumidity);
   }
- 
 }
 
 // add event listener to forms

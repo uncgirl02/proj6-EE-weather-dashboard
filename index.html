@@ -12,7 +12,7 @@
 
 <body class="flex-column min-100-vh">
   <header class="hero">
-    <h1 class="app-title bg-primary bg-gradient text-white text-center p-3">Weather Dashboard</h1>
+    <h1 class="app-title bg-primary bg-gradient fw-bold text-white text-center p-3">Weather Dashboard</h1>
   </header>
 
 
@@ -20,10 +20,10 @@
     <div class="col-12 col-md-3">
       <div class="card flex-column">
         <h3 class="card-header">Search for a City:</h3>
-        <form id="user-form" class="card-body">
+        <form id="user-form" class="card-body d-flex flex-column">
           <label class="form-label" for="city"></label>
-          <input name="city" id="city" type="text" autofocus="true" class="form-input" />
-          <button type="submit" id="btn" class="btn btn-primary">Search</button>
+          <input name="city" id="city" type="text" autofocus="true" class="form-input form-control form-control-large" />
+          <button type="submit" id="btn" class="btn btn-primary m-3">Search</button>
         </form>
       </div>
       <div id="saved-cities" class = "d-flex flex-column"></div>
